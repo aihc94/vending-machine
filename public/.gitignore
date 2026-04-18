@@ -1,0 +1,52 @@
+--- Composer ---
+
+/vendor/
+/composer.phar
+.composer/
+
+--- Symfony ---
+
+/var/
+/.env.local
+/.env.*.local
+/config/secrets/prod/prod.decrypt.private.php
+
+--- Logs & cache ---
+
+/var/cache/
+/var/log/
+
+--- PHPUnit ---
+
+/phpunit.xml
+/.phpunit.result.cache
+
+--- IDEs ---
+
+/.idea/
+/.vscode/
+/*.swp
+
+--- OS ---
+
+.DS_Store
+Thumbs.db
+
+--- Docker (opcional según setup) ---
+
+docker-compose.override.yml
+
+--- Misc ---
+
+/node_modules/
+npm-debug.log
+yarn-error.log
+###> symfony/framework-bundle ###
+/.env.local
+/.env.local.php
+/.env.*.local
+/config/secrets/prod/prod.decrypt.private.php
+/public/bundles/
+/var/
+/vendor/
+###< symfony/framework-bundle ###
