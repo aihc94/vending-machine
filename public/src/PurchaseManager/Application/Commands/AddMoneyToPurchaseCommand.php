@@ -8,13 +8,13 @@ use App\PurchaseManager\Domain\Exceptions\AmountNotValidException;
 use App\PurchaseManager\Domain\ValueObjects\Purchase;
 use App\Shared\Application\Contracts\SessionClient;
 
-class AddMoneyToPurchaseUseCase
+class AddMoneyToPurchaseCommand
 {
     public function __construct(
         private SessionClient $session
     ) {}
 
-    public function execute(float $money): void
+    public function execute(float $money): Purchase
     {
         $this->validateAmount($money);
     }

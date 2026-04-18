@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\PurchaseManager\Application\UseCases\AddMoneyToPurchaseUseCase;
+use App\PurchaseManager\Application\Commands\AddMoneyToPurchaseCommand;
 use App\PurchaseManager\Application\UseCases\ClosePurchaseUseCase;
 use App\PurchaseManager\Application\UseCases\InitializePurchaseUseCase;
 use App\PurchaseManager\Domain\Exceptions\AmountNotValidException;
@@ -17,7 +17,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class VendingMachineController extends AbstractController
 {
     #[Route('/purchase', name: 'start-purchase', methods: ['GET'])]
-    public function initiatePurchaseSession(
+    public function initiatePurchase(
         Request $request,
         InitializePurchaseUseCase $initializePurchase,
         ClosePurchaseUseCase $closePurchase,
@@ -41,11 +41,11 @@ class VendingMachineController extends AbstractController
     #[Route('/add-money', name: 'add-money', methods: ['POST'])]
     public function addMoneyToPurchase(
         Request $request,
-        AddMoneyToPurchaseUseCase $addMoneyUseCase
+        AddMoneyToPurchaseCommand $addMoneyCommand
     ): JsonResponse
     {
         try {
-            $purchase = $addMoneyUseCase->execute((float)$request->get('money'));
+            $purchase = $addMoneyCommand->execute((float)$request->get('money'));
         } catch (AmountNotValidException $exception) {
             return new JsonResponse(
                 [
