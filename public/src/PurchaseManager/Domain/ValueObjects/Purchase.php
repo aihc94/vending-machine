@@ -6,6 +6,13 @@ namespace App\PurchaseManager\Domain\ValueObjects;
 
 class Purchase
 {
+    public const array VALID_AMOUNTS = [
+        0.05,
+        0.10,
+        0.25,
+        1
+    ];
+
     public function __construct(
         private string $identifier,
         private float $totalAmount = 0,

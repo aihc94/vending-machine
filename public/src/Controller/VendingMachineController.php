@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\PurchaseManager\Application\UseCases\AddMoneyToPurchaseUseCase;
 use App\PurchaseManager\Application\UseCases\ClosePurchaseUseCase;
 use App\PurchaseManager\Application\UseCases\InitializePurchaseUseCase;
+use App\PurchaseManager\Domain\Exceptions\AmountNotValidException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -29,7 +32,31 @@ class VendingMachineController extends AbstractController
 
         return $this->render(
             'vendor-machine.html.twig',
-            $purchase->toArray()
+            [
+                'purchase' => $purchase->toArray()
+            ]
+        );
+    }
+
+    #[Route('/add-money', name: 'add-money', methods: ['POST'])]
+    public function addMoneyToPurchase(
+        Request $request,
+        AddMoneyToPurchaseUseCase $addMoneyUseCase
+    ): JsonResponse
+    {
+        try {
+            $purchase = $addMoneyUseCase->execute((float)$request->get('money'));
+        } catch (AmountNotValidException $exception) {
+            return new JsonResponse(
+                [
+                    'amountNotValid' => true
+                ]
+            );
+        }
+        return new JsonResponse(
+            [
+                'purchase' => $purchase->toArray()
+            ]
         );
     }
 }
