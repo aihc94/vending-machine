@@ -8,6 +8,7 @@ use App\PurchaseManager\Application\Commands\AddMoneyToPurchaseCommand;
 use App\PurchaseManager\Application\UseCases\ClosePurchaseUseCase;
 use App\PurchaseManager\Application\UseCases\InitializePurchaseUseCase;
 use App\PurchaseManager\Domain\Exceptions\AmountNotValidException;
+use App\PurchaseManager\Domain\Exceptions\PurchaseIdentifierNotStoredOnMemoryException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -44,6 +45,8 @@ class VendingMachineController extends AbstractController
         AddMoneyToPurchaseCommand $addMoneyCommand
     ): JsonResponse
     {
+        $this->validateCsrf($request);
+
         try {
             $purchase = $addMoneyCommand->execute((float)$request->get('money'));
         } catch (AmountNotValidException $exception) {
@@ -52,11 +55,27 @@ class VendingMachineController extends AbstractController
                     'amountNotValid' => true
                 ]
             );
+        } catch (PurchaseIdentifierNotStoredOnMemoryException $exception) {
+            return new JsonResponse(
+                [
+                    'purchaseNotStarted' => true
+                ]
+            );
         }
+
         return new JsonResponse(
             [
                 'purchase' => $purchase->toArray()
             ]
         );
+    }
+
+    private function validateCsrf(Request $request, string $tokenId = 'ajax'): void
+    {
+        $token = $request->headers->get('X-CSRF-Token');
+
+        if (!$token || !$this->isCsrfTokenValid($tokenId, $token)) {
+            throw new AccessDeniedHttpException('Invalid CSRF token');
+        }
     }
 }

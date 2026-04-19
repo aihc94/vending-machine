@@ -8,5 +8,8 @@ use App\PurchaseManager\Domain\ValueObjects\Purchase;
 
 interface PurchaseManagerService
 {
-    public function addMoneyToPurchase(): Purchase;
+    public function addMoneyToPurchase(
+        string $indentifier,
+        float $amount,
+    ): Purchase;
 }

@@ -11,14 +11,15 @@ use GuzzleHttp\Client;
 
 class ApiHttpClient implements HttpClient
 {
-    public const string BASE_URL='http://localhost:8081';
+    public const string API_URL = 'http://localhost:8081';
+    public const string API_SECRET = 'your-worst-secret';
 
     private Client $client;
 
     public function __construct() {
         $this->client = new Client(
             [
-                'base_uri' => self::BASE_URL,  
+                'base_uri' => self::API_URL,  
                 'timeout' => 5.0,
             ]
         );
@@ -26,8 +27,15 @@ class ApiHttpClient implements HttpClient
 
     public function send(HttpRequest $request): HttpResponse
     {
+        $headers = array_merge(
+            $request->headers(),
+            [
+                'X-API-SECRET' => self::API_SECRET
+            ]
+        );
+
         $options = [
-            'headers' => $request->headers(),
+            'headers' => $headers,
         ];
 
         if ($request->timeout() !== null) {

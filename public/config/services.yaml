@@ -22,3 +22,5 @@ services:
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
     App\Shared\Application\Contracts\SessionClient: '@App\Shared\Infrastructure\Clients\SymfonySessionClient'
+    App\Shared\Application\Contracts\HttpClient: '@App\Shared\Infrastructure\Clients\ApiHttpClient'
+    App\PurchaseManager\Domain\Contracts\PurchaseManagerService: '@App\PurchaseManager\Infrastructure\Http\ApiHttpClient'

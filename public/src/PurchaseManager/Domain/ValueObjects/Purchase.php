@@ -12,6 +12,7 @@ class Purchase
         0.25,
         1
     ];
+    public const string CURRENCY = 'EUR';
 
     public function __construct(
         private string $identifier,

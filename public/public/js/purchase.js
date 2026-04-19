@@ -14,13 +14,19 @@ function addMoney() {
     console.log('AddMoneyCalled');
     fetch('/add-money', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+            'Content-Type': 'application/json',
+            'X-CSRF-Token': getCsrfToken()
+        },
         body: JSON.stringify({ money: getMoney() })
     })
     .then(res => res.json())
     .then(data => {
         if (data.amountNotValid) {
             validationMessage.textContent = 'Amount not valid';
+            return;
+        }
+        if (data.purchaseNotStarted) {
             return;
         }
         validationMessage.textContent = '';
@@ -31,7 +37,10 @@ function addMoney() {
 function purchase(product) {
     fetch('/purchase/' + product, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+            'Content-Type': 'application/json',
+            'X-CSRF-Token': getCsrfToken()
+        },
         body: JSON.stringify({ money: getMoney() })
     })
     .then(res => res.json())
@@ -40,8 +49,15 @@ function purchase(product) {
 
 function closePurchase() {
     fetch('/close-purchase', {
-        method: 'POST'
+        method: 'POST',
+        headers: { 
+            'X-CSRF-Token': getCsrfToken()
+        },
     })
     .then(res => res.json())
     .then(data => updateView(data));
+}
+
+function getCsrfToken() {
+    return document.querySelector('meta[name="csrf-token"]').content;
 }
