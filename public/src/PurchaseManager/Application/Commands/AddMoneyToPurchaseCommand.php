@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\PurchaseManager\Application\UseCases;
+namespace App\PurchaseManager\Application\Commands;
 
 use App\PurchaseManager\Domain\Contracts\PurchaseManagerService;
 use App\PurchaseManager\Domain\Exceptions\AmountNotValidException;

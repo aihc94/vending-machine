@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace App\PurchaseManager\Infrastructure\Http;
 
 use App\PurchaseManager\Domain\Contracts\PurchaseManagerService;
+use App\PurchaseManager\Domain\Factories\PurchaseFactory;
 use App\PurchaseManager\Domain\ValueObjects\Purchase;
 use App\Shared\Application\Contracts\HttpClient;
+use App\Shared\Application\Factories\HttpRequestFactory;
 
 class ApiPurchaseManagerService implements PurchaseManagerService
 {

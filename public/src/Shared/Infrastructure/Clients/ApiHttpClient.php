@@ -11,7 +11,7 @@ use GuzzleHttp\Client;
 
 class ApiHttpClient implements HttpClient
 {
-    public const string API_URL = 'http://localhost:8081';
+    public const string API_URL = 'http://router:8081';
     public const string API_SECRET = 'your-worst-secret';
 
     private Client $client;

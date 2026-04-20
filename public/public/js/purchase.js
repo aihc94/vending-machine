@@ -11,7 +11,6 @@ function updateView(data) {
 }
 
 function addMoney() {
-    console.log('AddMoneyCalled');
     fetch('/add-money', {
         method: 'POST',
         headers: { 

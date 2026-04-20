@@ -11,5 +11,6 @@ interface PurchaseManagerService
     public function addMoneyToPurchase(
         string $indentifier,
         float $amount,
+        string $currency,
     ): Purchase;
 }

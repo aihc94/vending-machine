@@ -48,7 +48,17 @@ class VendingMachineController extends AbstractController
         $this->validateCsrf($request);
 
         try {
-            $purchase = $addMoneyCommand->execute((float)$request->get('money'));
+            $data = json_decode($request->getContent(), true);
+
+            if (!isset($data['money'])) {
+                return new JsonResponse(
+                    [
+                        'amountNotValid' => true
+                    ]
+                );
+            }
+            
+            $purchase = $addMoneyCommand->execute((float)$data['money']);
         } catch (AmountNotValidException $exception) {
             return new JsonResponse(
                 [
