@@ -6,7 +6,7 @@ function getMoney() {
 
 function updateView(data) {
     document.getElementById('identifier').textContent = data.identifier;
-    document.getElementById('totalAmount').textContent = data.totalAmount;
+    document.getElementById('totalAmount').textContent = data.currentBalance;
     document.getElementById('restartPurchase').textContent = data.restartPurchase ? 'Yes' : 'No';
 }
 

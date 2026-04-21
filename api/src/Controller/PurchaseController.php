@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Purchase\Application\UseCases\AddMoneyToPurchaseUseCase;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,11 +15,22 @@ class PurchaseController extends AbstractController
 {
     #[Route('/add-money-to-purchase', name: 'add-money', methods: ['POST'])]
     public function addMoneyToPurchase(
-        Request $request,   
+        Request $request,
+        AddMoneyToPurchaseUseCase $useCase,
     ): JsonResponse
     {
-        $purchase = 10;
+        $response = $useCase->execute(
+            $request->get('identifier'),
+            (float)$request->get('amount'),
+            $request->get('currency'),
+        );
 
-        return new JsonResponse();
+        return new JsonResponse(
+            [
+                'identifier' => $response->identifier(),
+                'history' => $response->history(),
+                'currentBalance' => $response->currentBalance(),
+            ]
+        );
     }
 }
