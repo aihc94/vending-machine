@@ -15,7 +15,7 @@ class FindAllPurchaseHistoryByIdentifierQuery
 
     public function execute(string $identifier): PurchaseHistoryCollection
     {
-        return $this->purchaseHistoryRepository->findByIdentifier(
+        return $this->purchaseHistoryRepository->findAllByIdentifier(
             $identifier
         );
     }

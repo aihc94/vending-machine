@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Purchase\Domain\Factories;
+namespace App\Purchase\Application\Factories;
 
-use App\Purchase\Domain\Entities\PurchaseHistory;
+use App\Purchase\Application\DTOs\CurrentPurchaseInformation;
 
 class CurrentPurchaseInformationFactory
 {

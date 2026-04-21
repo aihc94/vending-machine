@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Purchase\Infrastructure\Persistence\Mongodb;
+namespace App\Purchase\Infrastructure\Persistence\MongoDb;
 
 use App\Purchase\Domain\Entities\PurchaseHistory;
+use App\Purchase\Domain\Entities\PurchaseHistoryCollection;
+use App\Purchase\Domain\Factories\PurchaseHistoryFactory;
 use MongoDB\Client;
 use MongoDB\Collection;
 
@@ -38,5 +40,39 @@ class MongoDbPurchaseHistoryRepository
         $cursor = $this->collection->find([
             'identifier' => $identifier
         ]);
+
+        $items = [];
+
+        foreach ($cursor as $document) {
+            $items[] = $this->toDomain($document);
+        }
+
+        return new PurchaseHistoryCollection($items);
+    }
+
+    private function toDomain(array $document): PurchaseHistory
+    {
+        return PurchaseHistoryFactory::fromArray([
+            'identifier' => $document['identifier'],
+            'action' => $document['action'],
+            'amount' => $document['amount'],
+            'currency' => $document['currency'],
+            'productName' => $document['product_name'],
+            'createdAt' => $document['created_at'],
+            'updatedAt' => $document['updated_at'],
+        ]);
+    }
+
+    private function toDocument(PurchaseHistory $record): array
+    {
+        return [
+            'identifier' => $record->identifier(),
+            'action' => $record->action(),
+            'amount' => $record->amount(),
+            'currency' => $record->currency(),
+            'product_name' => $record->productName(),
+            'created_at' => $record->createdAt()->format('Y-m-d H:i:s'),
+            'updated_at' => $record->updatedAt()->format('Y-m-d H:i:s'),
+        ];
     }
 }
