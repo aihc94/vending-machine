@@ -15,7 +15,7 @@ use MongoDB\Collection;
 class MongoDbPurchaseHistoryRepository implements PurchaseHistoryRepository
 {
     //This valiues must be provided by the ServiceProvider by the construct with env variables
-    public const string MONGO_URL = 'mongodb://admin:notYourProblem@database:27017/?authSource=admin&authMechanism=SCRAM-SHA-1';
+    public const string MONGO_URL = 'mongodb://admin:notYourProblem@database:27017';
     public const string MONGO_DATABASE = 'vending_machine';
     public const string MONGO_TABLE = 'purchase_history';
 

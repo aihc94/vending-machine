@@ -13,4 +13,9 @@ interface PurchaseManagerService
         float $amount,
         string $currency,
     ): Purchase;
+
+    public function purchaseProduct(
+        string $purchaseIdentifier,
+        int $productId
+        ): Purchase;
 }

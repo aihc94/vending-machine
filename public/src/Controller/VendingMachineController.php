@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\PurchaseManager\Application\Commands\AddMoneyToPurchaseCommand;
+use App\PurchaseManager\Application\Commands\PurchaseProductCommand;
 use App\PurchaseManager\Application\UseCases\ClosePurchaseUseCase;
 use App\PurchaseManager\Application\UseCases\InitializePurchaseUseCase;
 use App\PurchaseManager\Domain\Exceptions\AmountNotValidException;
@@ -72,6 +73,25 @@ class VendingMachineController extends AbstractController
                 ]
             );
         }
+
+        return new JsonResponse(
+            [
+                'purchase' => $purchase->toArray()
+            ]
+        );
+    }
+
+    #[Route('/purchase-product', name: 'purchase-product', methods: ['POST'])]
+    public function purchaseProduct(
+        Request $request,
+        PurchaseProductCommand $command
+    ): JsonResponse
+    {
+        $this->validateCsrf($request);
+
+        $data = json_decode($request->getContent(), true);
+            
+        $purchase = $addMoneyCommand->execute((int)$data['productId']);
 
         return new JsonResponse(
             [
