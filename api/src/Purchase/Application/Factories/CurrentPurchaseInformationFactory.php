@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Purchase\Application\Factories;
 
 use App\Purchase\Application\DTOs\CurrentPurchaseInformation;
+use App\Purchase\Domain\Entities\PurchaseHistoryCollection;
 
 class CurrentPurchaseInformationFactory
 {
@@ -14,7 +15,7 @@ class CurrentPurchaseInformationFactory
 
         return new CurrentPurchaseInformation(
             $data['identifier'],
-            $data['history'] ?? [],
+            $data['history'] ?? new PurchaseHistoryCollection([]),
             $data['currentBalance']
         );
     }

@@ -38,6 +38,9 @@ class ApiPurchaseManagerService implements PurchaseManagerService
 
         $response = $this->httpClient->send($request);
 
-        return PurchaseFactory::fromArray([]);
+        return PurchaseFactory::fromArray([
+            'identifier' => $response->body()['identifier'],
+            'totalAmount' => $response->body()['currentBalance'],
+        ]);
     }
 }

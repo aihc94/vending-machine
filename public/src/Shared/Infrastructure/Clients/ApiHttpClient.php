@@ -11,6 +11,7 @@ use GuzzleHttp\Client;
 
 class ApiHttpClient implements HttpClient
 {
+    //This valiues must be provided by the ServiceProvider by the construct with env variables
     public const string API_URL = 'http://router:8081';
     public const string API_SECRET = 'your-worst-secret';
 
@@ -42,7 +43,7 @@ class ApiHttpClient implements HttpClient
             $options['timeout'] = $request->timeout();
         }
 
-        $options['data'] = $request->requestData();
+        $options['form_params'] = $request->requestData();
 
         try {
             $guzzleResponse = $this->client->request(

@@ -28,7 +28,6 @@ class PurchaseController extends AbstractController
         return new JsonResponse(
             [
                 'identifier' => $response->identifier(),
-                'history' => $response->history(),
                 'currentBalance' => $response->currentBalance(),
             ]
         );

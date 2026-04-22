@@ -10,7 +10,7 @@ use App\Purchase\Domain\Repositories\PurchaseHistoryRepository;
 class FindAllPurchaseHistoryByIdentifierQuery
 {
     public function __construct(
-        PurchaseHistoryRepository $purchaseHistoryRepository
+        private PurchaseHistoryRepository $purchaseHistoryRepository
     ) {}
 
     public function execute(string $identifier): PurchaseHistoryCollection

@@ -19,7 +19,7 @@ class CurrentPurchaseInformation
         return $this->identifier;
     }
 
-    public function history(): array
+    public function history(): PurchaseHistoryCollection
     {
         return $this->history;
     }

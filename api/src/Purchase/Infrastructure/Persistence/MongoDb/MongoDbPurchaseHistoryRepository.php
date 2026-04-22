@@ -7,12 +7,15 @@ namespace App\Purchase\Infrastructure\Persistence\MongoDb;
 use App\Purchase\Domain\Entities\PurchaseHistory;
 use App\Purchase\Domain\Entities\PurchaseHistoryCollection;
 use App\Purchase\Domain\Factories\PurchaseHistoryFactory;
+use App\Purchase\Domain\Repositories\PurchaseHistoryRepository;
+use MongoDB\Model\BSONDocument;
 use MongoDB\Client;
 use MongoDB\Collection;
 
-class MongoDbPurchaseHistoryRepository
+class MongoDbPurchaseHistoryRepository implements PurchaseHistoryRepository
 {
-    public const string MONGO_URL = 'mongodb://localhost:27017';
+    //This valiues must be provided by the ServiceProvider by the construct with env variables
+    public const string MONGO_URL = 'mongodb://admin:notYourProblem@database:27017/?authSource=admin&authMechanism=SCRAM-SHA-1';
     public const string MONGO_DATABASE = 'vending_machine';
     public const string MONGO_TABLE = 'purchase_history';
 
@@ -50,7 +53,7 @@ class MongoDbPurchaseHistoryRepository
         return new PurchaseHistoryCollection($items);
     }
 
-    private function toDomain(array $document): PurchaseHistory
+    private function toDomain(BSONDocument $document): PurchaseHistory
     {
         return PurchaseHistoryFactory::fromArray([
             'identifier' => $document['identifier'],

@@ -5,9 +5,9 @@ function getMoney() {
 }
 
 function updateView(data) {
-    document.getElementById('identifier').textContent = data.identifier;
-    document.getElementById('totalAmount').textContent = data.currentBalance;
-    document.getElementById('restartPurchase').textContent = data.restartPurchase ? 'Yes' : 'No';
+    document.getElementById('identifier').textContent = data.purchase.identifier;
+    document.getElementById('totalAmount').textContent = data.purchase.totalAmount;
+    document.getElementById('restartPurchase').textContent = data.purchase.restartPurchase ? 'Yes' : 'No';
 }
 
 function addMoney() {

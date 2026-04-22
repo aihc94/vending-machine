@@ -7,15 +7,16 @@ namespace App\Purchase\Application\UseCases;
 use App\Purchase\Application\Commands\CreatePurchaseHistoryCommand;
 use App\Purchase\Application\DTOs\CurrentPurchaseInformation;
 use App\Purchase\Application\Factories\CurrentPurchaseInformationFactory;
+use App\Purchase\Application\Queries\FindAllPurchaseHistoryByIdentifierQuery;
 use App\Purchase\Application\Services\PurchaseBalanceCalculartorService;
 use App\Purchase\Domain\Entities\PurchaseHistory;
 
 class AddMoneyToPurchaseUseCase
 {
     public function __construct(
-        CreatePurchaseHistoryCommand $command,
-        FindAllPurchaseHistoryByIdentifierQuery $query,
-        PurchaseBalanceCalculartorService $balanceService,
+        private CreatePurchaseHistoryCommand $command,
+        private FindAllPurchaseHistoryByIdentifierQuery $query,
+        private PurchaseBalanceCalculartorService $balanceService,
     ) {}
 
     public function execute(
@@ -35,11 +36,11 @@ class AddMoneyToPurchaseUseCase
 
         $purchaseHistoryCollection = $this->query->execute($identifier);
 
-        $balance = $balanceService->calculateBalance($purchaseHistoryCollection);
+        $balance = $this->balanceService->calculateBalance($purchaseHistoryCollection);
 
         $purchaseInformation = [
             'identifier' => $identifier,
-            'history' => $purchaseHistoryCollection->all(),
+            'history' => $purchaseHistoryCollection,
             'currentBalance' => $balance
         ];
 
