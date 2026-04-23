@@ -12,6 +12,7 @@ class ChangeFactory
     {
         return new Change(
             (float)$data['amount'],
+            $data['currency'],
             (int)$data['quantity']
         );
     }

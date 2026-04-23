@@ -46,12 +46,12 @@ class ApiPurchaseManagerService implements PurchaseManagerService
 
     public function purchaseProduct(
         string $identifier,
-        int $productId
+        string $productCode
     ): Purchase
     {
         $requestData = [
             'identifier' => $indentifier,
-            'productId' => $productId
+            'productCode' => $productCode
         ];
 
         $data = [
@@ -68,5 +68,22 @@ class ApiPurchaseManagerService implements PurchaseManagerService
             'identifier' => $response->body()['identifier'],
             'totalAmount' => $response->body()['currentBalance'],
         ]);
+    }
+
+    public function obtainMachineStatus(): array
+    {
+        $data = [
+            'method' => 'GET',
+            'url' => '/machine-status'
+        ];
+
+        $request = HttpRequestFactory::fromArray($data);
+
+        $response = $this->httpClient->send($request);
+
+        return [
+            'products' => $response->body()['products'],
+            'change' => $response->body()['change'],
+        ];
     }
 }

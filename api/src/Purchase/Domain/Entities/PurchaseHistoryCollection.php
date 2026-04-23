@@ -22,4 +22,14 @@ class PurchaseHistoryCollection
     public function all(): array {
         return $this->purchaseHistoryArray;
     }
+
+    public function toArray(): array
+    {
+        $arrayToReturn = [];
+        foreach ($this->purchaseHistoryArray as $purchaseHistory) {
+            $arrayToReturn[] = $purchaseHistory->toArray();
+        }
+
+        return $arrayToReturn;
+    }
 }

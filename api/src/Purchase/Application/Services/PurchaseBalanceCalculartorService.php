@@ -33,6 +33,6 @@ class PurchaseBalanceCalculartorService
             }
         }
 
-        return $balance;
+        return round($balance, 2);
     }
 }

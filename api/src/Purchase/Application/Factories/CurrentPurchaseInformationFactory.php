@@ -16,7 +16,9 @@ class CurrentPurchaseInformationFactory
         return new CurrentPurchaseInformation(
             $data['identifier'],
             $data['history'] ?? new PurchaseHistoryCollection([]),
-            $data['currentBalance']
+            $data['currentBalance'],
+            $data['product'] ?? null,
+            $data['changeToReturn'] ?? []
         );
     }
 

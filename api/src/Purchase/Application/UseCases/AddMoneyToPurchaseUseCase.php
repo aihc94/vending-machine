@@ -25,14 +25,12 @@ class AddMoneyToPurchaseUseCase
         string $currency,
     ): CurrentPurchaseInformation
     {
-        $data = [
-            'identifier' => $identifier,
-            'action' => PurchaseHistory::ACTION_TYPE_CHARGE,
-            'amount' => $amount,
-            'currency' => $currency
-        ];
-
-        $this->command->execute($data);
+        $this->command->execute(
+            $identifier,
+            PurchaseHistory::ACTION_TYPE_CHARGE,
+            $amount,
+            $currency
+        );
 
         $purchaseHistoryCollection = $this->query->execute($identifier);
 

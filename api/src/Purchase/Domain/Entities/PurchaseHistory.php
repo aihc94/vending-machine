@@ -54,4 +54,17 @@ class PurchaseHistory
     {
         return $this->updatedAt;
     }
+
+    public function toArray(): array
+    {
+        return [
+            'identifier' => $this->identifier(),
+            'action' => $this->action(),
+            'amount' => $this->amount(),
+            'currency' => $this->currency(),
+            'productName' => $this->productName(),
+            'createdAt' => $this->createdAt()->format('Y-m-d H:i:s'),
+            'updatedAt' => $this->updatedAt()->format('Y-m-d H:i:s'),
+        ];
+    }
 }

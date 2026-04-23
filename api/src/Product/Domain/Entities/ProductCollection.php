@@ -20,6 +20,16 @@ class ProductCollection
     
     /** @return Product[] */
     public function all(): array {
-        return $this->changeArray;
+        return $this->productArray;
+    }
+
+    public function toArray(): array
+    {
+        $arrayToReturn = [];
+        foreach ($this->productArray as $product) {
+            $arrayToReturn[] = $product->toArray();
+        }
+
+        return $arrayToReturn;
     }
 }

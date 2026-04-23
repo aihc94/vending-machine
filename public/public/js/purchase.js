@@ -34,13 +34,13 @@ function addMoney() {
 }
 
 function purchase(product) {
-    fetch('/purchase/' + product, {
+    fetch('/purchase-product', {
         method: 'POST',
         headers: { 
             'Content-Type': 'application/json',
             'X-CSRF-Token': getCsrfToken()
         },
-        body: JSON.stringify({ money: getMoney() })
+        body: JSON.stringify({ productCode: product })
     })
     .then(res => res.json())
     .then(data => updateView(data));

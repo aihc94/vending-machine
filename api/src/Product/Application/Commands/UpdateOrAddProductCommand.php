@@ -8,7 +8,7 @@ use App\Product\Domain\Entities\Product;
 use App\Product\Domain\Factories\ProductFactory;
 use App\Product\Domain\Repositories\ProductRepository;
 
-class AddProductCommand
+class UpdateOrAddProductCommand
 {
     public function __construct(
         private ProductRepository $repository,
@@ -18,7 +18,6 @@ class AddProductCommand
         string $code,
         string $name,
         float $price,
-        string $currency,
         int $quantity
     ): Product
     {
@@ -27,7 +26,7 @@ class AddProductCommand
                 'code' => $code,
                 'name' => $name,
                 'price' => $price,
-                'currency' => $currency,
+                'currency' => Product::PRICE_CURRENCY,
                 'quantity' => $quantity,
             ]
         );

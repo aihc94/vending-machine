@@ -62,7 +62,7 @@ class MongoDbProductRepository implements ProductRepository
         return new ProductCollection($items);
     }
 
-    private function toDomain(BSONDocument $document): PurchaseHistory
+    private function toDomain(BSONDocument $document): Product
     {
         return ProductFactory::fromArray([
             'code' => $document['code'],

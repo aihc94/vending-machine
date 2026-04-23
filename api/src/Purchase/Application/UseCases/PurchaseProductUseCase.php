@@ -4,47 +4,96 @@ declare(strict_types=1);
 
 namespace App\Purchase\Application\UseCases;
 
+use App\Product\Application\Commands\UpdateOrAddProductCommand;
+use App\Product\Application\Queries\FindProductByCodeQuery;
+use App\Product\Domain\Entities\Product;
 use App\Purchase\Application\Commands\CreatePurchaseHistoryCommand;
 use App\Purchase\Application\DTOs\CurrentPurchaseInformation;
 use App\Purchase\Application\Factories\CurrentPurchaseInformationFactory;
 use App\Purchase\Application\Queries\FindAllPurchaseHistoryByIdentifierQuery;
+use App\Purchase\Application\Services\DecreaseChangeQuantityService;
 use App\Purchase\Application\Services\PurchaseBalanceCalculartorService;
 use App\Purchase\Domain\Entities\PurchaseHistory;
+use App\Purchase\Domain\Entities\PurchaseHistoryCollection;
 
 class PurchaseProductUseCase
 {
     public function __construct(
-        private CreatePurchaseHistoryCommand $command,
-        private FindAllPurchaseHistoryByIdentifierQuery $query,
+        private CreatePurchaseHistoryCommand $historyCommand,
+        private FindAllPurchaseHistoryByIdentifierQuery $historyQuery,
         private PurchaseBalanceCalculartorService $balanceService,
+        private FindProductByCodeQuery $productQuery,
+        private ChangeGetterForValueService $changeGetterService,
+        private UpdateOrAddProductCommand $updateProductCommand,
+        private DecreaseChangeQuantityService $changeUpdaterService
     ) {}
 
     public function execute(
         string $identifier,
-        int $productId
+        string $productCode
     ): CurrentPurchaseInformation
     {
-        $data = [
-            'identifier' => $identifier,
-            'action' => PurchaseHistory::ACTION_TYPE_CHARGE,
-            'amount' => $amount,
-            'currency' => $currency
-        ];
+        $purchaseHistoryCollection = $this->historyQuery->execute($identifier);
 
-        $this->command->execute($data);
+        $product = $this->productQuery->execute($productCode);
 
-        $purchaseHistoryCollection = $this->query->execute($identifier);
+        $amountToReturn = $this->validate($product, $purchaseHistoryCollection);
+
+        if ($amountToReturn !== 0.00) {
+            $changeToReturn = $this->changeGetterService->getChangeForValue($amountRound);
+        }
+
+        $this->updateProductPurchaseInformation($identifier, $product);
+
+        $this->historyCommand->execute(
+            $identifier,
+            PurchaseHistory::ACTION_TYPE_CLOSE,
+            $amountToReturn,
+            $product->currency()
+        );
+
+        if (isset($changeToReturn)) {
+
+        }
+    }
+
+    private function validate(
+        Product $product,
+        PurchaseHistoryCollection $purchaseHistoryCollection
+    ): float
+    {
+        if ($product->quantity() === 0) {
+            throw new \Exception('Product out of stock');
+        }
 
         $balance = $this->balanceService->calculateBalance($purchaseHistoryCollection);
 
-        $purchaseInformation = [
-            'identifier' => $identifier,
-            'history' => $purchaseHistoryCollection,
-            'currentBalance' => $balance
-        ];
+        $amountToReturn = $balance - $product->price();
+        
+        if ($amountToReturn < 0) {
+            throw new \Exception('Put more money in the bag');
+        }
 
-        return CurrentPurchaseInformationFactory::fromArray(
-            $purchaseInformation
+        return round($amountToReturn, 2);
+    }
+
+    private function updateProductPurchaseInformation(
+        string $identifier,
+        Product $product,
+    ): void
+    {
+        $this->historyCommand->execute(
+            $identifier,
+            PurchaseHistory::ACTION_TYPE_PURCHASE,
+            $product->price(),
+            $product->currency()
+        );
+
+        $this->updateProductCommand->execute(
+            $product->code(),
+            $product->name(),
+            $product->price(),
+            ($product->quantity() - 1)
         );
     }
 }

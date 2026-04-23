@@ -10,9 +10,17 @@
 
 <br><br>
 
-<button onclick="purchase('product1')">Producto 1</button>
-<button onclick="purchase('product2')">Producto 2</button>
-<button onclick="purchase('product3')">Producto 3</button>
+{% for product in products %}
+    <div style="margin-bottom: 10px;">
+        <button onclick="purchase('{{ product.code }}')">
+            {{ product.name }}
+        </button>
+        <div style="font-size: 0.9em;">
+            Precio: {{ product.price }} {{ product.currency }}<br>
+            Stock: {{ product.quantity }}
+        </div>
+    </div>
+{% endfor %}
 
 <br><br>
 
@@ -23,5 +31,14 @@
 <p>Identifier: <span id="identifier">{{ purchase.identifier }}</span></p>
 <p>Total Amount: <span id="totalAmount">{{ purchase.totalAmount }}</span></p>
 <p>Restart Purchase: <span id="restartPurchase">{{ purchase.restartPurchase ? 'Yes' : 'No' }}</span></p>
+
+<h3>Debug</h3>
+<pre>
+    Products:
+    {{ dump(products) }}
+
+    Change:
+    {{ dump(change) }}
+</pre>
 
 <script src="{{ asset('js/purchase.js') }}"></script>

@@ -6,6 +6,8 @@ namespace App\Product\Domain\Entities;
 
 class Product
 {
+    public const string PRICE_CURRENCY = 'EUR';
+
     public function __construct(
         private string $code,
         private string $name,
@@ -37,5 +39,16 @@ class Product
     public function quantity(): int
     {
         return $this->quantity;
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'code' => $this->code(),
+            'name' => $this->name(),
+            'price' => $this->price(),
+            'currency' => $this->currency(),
+            'quantity' => $this->quantity(),
+        ];
     }
 }

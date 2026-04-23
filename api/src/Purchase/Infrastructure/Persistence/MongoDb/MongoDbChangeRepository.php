@@ -47,7 +47,7 @@ class MongoDbChangeRepository implements ChangeRepository
         return $this->toDomain($result);
     }
 
-    public function findAll(string $identifier): PurchaseHistoryCollection
+    public function findAll(): ChangeCollection
     {
         $cursor = $this->collection->find();
 
@@ -57,13 +57,14 @@ class MongoDbChangeRepository implements ChangeRepository
             $items[] = $this->toDomain($document);
         }
 
-        return new PurchaseHistoryCollection($items);
+        return new ChangeCollection($items);
     }
 
     private function toDomain(BSONDocument $document): Change
     {
         return ChangeFactory::fromArray([
             'amount' => $document['amount'],
+            'currency' => $document['currency'],
             'quantity' => $document['quantity'],
         ]);
     }
@@ -72,6 +73,7 @@ class MongoDbChangeRepository implements ChangeRepository
     {
         return [
             'amount' => $record->amount(),
+            'currency' => $record->currency(),
             'quantity' => $record->quantity(),
         ];
     }

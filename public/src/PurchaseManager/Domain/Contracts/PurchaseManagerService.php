@@ -16,6 +16,8 @@ interface PurchaseManagerService
 
     public function purchaseProduct(
         string $purchaseIdentifier,
-        int $productId
-        ): Purchase;
+        string $productCode
+    ): Purchase;
+
+    public function obtainMachineStatus(): array;
 }

@@ -22,4 +22,14 @@ class ChangeCollection
     public function all(): array {
         return $this->changeArray;
     }
+
+    public function toArray(): array
+    {
+        $arrayToReturn = [];
+        foreach ($this->changeArray as $change) {
+            $arrayToReturn[] = $change->toArray();
+        }
+
+        return $arrayToReturn;
+    }
 }

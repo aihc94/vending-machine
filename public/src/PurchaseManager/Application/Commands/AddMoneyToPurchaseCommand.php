@@ -21,6 +21,7 @@ class AddMoneyToPurchaseCommand
     {
         $this->validate($money);
         $purchaseIdentifier = $this->session->get('purchaseId');
+        
         return $this->purchaseService->addMoneyToPurchase(
             $purchaseIdentifier,
             $money,

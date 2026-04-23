@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\PurchaseManager\Application\Commands\AddMoneyToPurchaseCommand;
 use App\PurchaseManager\Application\Commands\PurchaseProductCommand;
+use App\PurchaseManager\Application\Queries\ObtainVendingMachineStatusQuery;
 use App\PurchaseManager\Application\UseCases\ClosePurchaseUseCase;
 use App\PurchaseManager\Application\UseCases\InitializePurchaseUseCase;
 use App\PurchaseManager\Domain\Exceptions\AmountNotValidException;
@@ -23,6 +24,7 @@ class VendingMachineController extends AbstractController
         Request $request,
         InitializePurchaseUseCase $initializePurchase,
         ClosePurchaseUseCase $closePurchase,
+        ObtainVendingMachineStatusQuery $machineStatusQuery,
     ): Response
     {
         $purchase = $initializePurchase->execute();
@@ -32,10 +34,14 @@ class VendingMachineController extends AbstractController
             return $this->redirect($request->getUri());
         }
 
+        $machineStatus = $machineStatusQuery->execute();
+
         return $this->render(
             'vendor-machine.html.twig',
             [
-                'purchase' => $purchase->toArray()
+                'purchase' => $purchase->toArray(),
+                'products' => $machineStatus['products'],
+                'change' => $machineStatus['change'],
             ]
         );
     }
@@ -91,7 +97,7 @@ class VendingMachineController extends AbstractController
 
         $data = json_decode($request->getContent(), true);
             
-        $purchase = $addMoneyCommand->execute((int)$data['productId']);
+        $purchase = $command->execute($data['productCode']);
 
         return new JsonResponse(
             [

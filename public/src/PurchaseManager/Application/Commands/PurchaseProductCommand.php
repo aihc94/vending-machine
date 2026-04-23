@@ -15,10 +15,10 @@ class PurchaseProductCommand
         private PurchaseManagerService $purchaseService,
     ) {}
 
-    public function execute(int $productId): Purchase
+    public function execute(string $productCode): Purchase
     {
         $identifier = $this->session->get('purchaseId');
 
-        return $this->purchaseService->purchaseProduct($identifier, $productId);
+        return $this->purchaseService->purchaseProduct($identifier, $productCode);
     }
 }

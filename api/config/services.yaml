@@ -21,4 +21,6 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+    App\Purchase\Domain\Repositories\ChangeRepository: '@App\Purchase\Infrastructure\Persistence\MongoDb\MongoDbChangeRepository'
     App\Purchase\Domain\Repositories\PurchaseHistoryRepository: '@App\Purchase\Infrastructure\Persistence\MongoDb\MongoDbPurchaseHistoryRepository'
+    App\Product\Domain\Repositories\ProductRepository: '@App\Product\Infrastructure\Persistence\MongoDb\MongoDbProductRepository'

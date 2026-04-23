@@ -14,9 +14,21 @@ class CreatePurchaseHistoryCommand
         private PurchaseHistoryRepository $purchaseHistoryRepository,
     ) {}
 
-    public function execute(array $data): PurchaseHistory
+    public function execute(
+        string $identifier,
+        string $action,
+        float $amount,
+        string $currency,
+    ): PurchaseHistory
     {
-        $purchaseHistory = PurchaseHistoryFactory::fromArray($data);
+        $purchaseHistory = PurchaseHistoryFactory::fromArray(
+            [
+                'identifier' => $identifier,
+                'action' => $action,
+                'amount' => $amount,
+                'currency' => $currency
+            ]
+        );
 
         $this->purchaseHistoryRepository->persist($purchaseHistory);
 
