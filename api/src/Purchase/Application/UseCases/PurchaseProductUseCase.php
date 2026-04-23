@@ -11,6 +11,7 @@ use App\Purchase\Application\Commands\CreatePurchaseHistoryCommand;
 use App\Purchase\Application\DTOs\CurrentPurchaseInformation;
 use App\Purchase\Application\Factories\CurrentPurchaseInformationFactory;
 use App\Purchase\Application\Queries\FindAllPurchaseHistoryByIdentifierQuery;
+use App\Purchase\Application\Services\ChangeGetterForValueService;
 use App\Purchase\Application\Services\DecreaseChangeQuantityService;
 use App\Purchase\Application\Services\PurchaseBalanceCalculartorService;
 use App\Purchase\Domain\Entities\PurchaseHistory;
@@ -39,8 +40,8 @@ class PurchaseProductUseCase
 
         $amountToReturn = $this->validate($product, $purchaseHistoryCollection);
 
-        if ($amountToReturn !== 0.00) {
-            $changeToReturn = $this->changeGetterService->getChangeForValue($amountRound);
+        if ($amountToReturn !== 0) {
+            $changeToReturn = $this->changeGetterService->getChangeForValue($amountToReturn);
         }
 
         $this->updateProductPurchaseInformation($identifier, $product);
@@ -53,8 +54,20 @@ class PurchaseProductUseCase
         );
 
         if (isset($changeToReturn)) {
-
+            $this->changeUpdaterService->updateChangeStock($changeToReturn);
         }
+
+        $purchaseHistoryCollection = $this->historyQuery->execute($identifier);
+
+        return CurrentPurchaseInformationFactory::fromArray(
+            [
+                'identifier' => $identifier,
+                'history' => $purchaseHistoryCollection,
+                'currentBalance' => 0,
+                'product' => $product,
+                'changeToReturn' => $changeToReturn ?? [],
+            ]
+        );
     }
 
     private function validate(
@@ -86,7 +99,8 @@ class PurchaseProductUseCase
             $identifier,
             PurchaseHistory::ACTION_TYPE_PURCHASE,
             $product->price(),
-            $product->currency()
+            $product->currency(),
+            $product->code()
         );
 
         $this->updateProductCommand->execute(

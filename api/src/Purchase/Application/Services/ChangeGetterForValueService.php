@@ -23,8 +23,8 @@ class ChangeGetterForValueService
         $amountToReturn = round($amountToReturn, 2);
         $remaining = (int) round($amountToReturn * 100);
 
-        $coin = [];
-        foreach ($changeStock as $change) {
+        $coins = [];
+        foreach ($changeStock->all() as $change) {
             $coins[] = [
                 'amount' => $change->amount(),
                 'amount_cents' => (int) round($change->amount() * 100),

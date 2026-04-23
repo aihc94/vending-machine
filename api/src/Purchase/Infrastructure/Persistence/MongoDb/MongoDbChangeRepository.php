@@ -33,8 +33,10 @@ class MongoDbChangeRepository implements ChangeRepository
 
     public function persist(Change $record): void
     {
-        $this->collection->insertOne(
-            $this->toDocument($record)
+        $this->collection->updateOne(
+            ['amount' => $record->amount()],
+            ['$set' => $this->toDocument($record)],
+            ['upsert' => true]
         );
     }
 

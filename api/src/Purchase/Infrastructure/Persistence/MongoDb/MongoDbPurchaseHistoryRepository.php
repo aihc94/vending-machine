@@ -60,7 +60,7 @@ class MongoDbPurchaseHistoryRepository implements PurchaseHistoryRepository
             'action' => $document['action'],
             'amount' => $document['amount'],
             'currency' => $document['currency'],
-            'productName' => $document['product_name'],
+            'productCode' => $document['product_code'],
             'createdAt' => $document['created_at'],
             'updatedAt' => $document['updated_at'],
         ]);
@@ -73,7 +73,7 @@ class MongoDbPurchaseHistoryRepository implements PurchaseHistoryRepository
             'action' => $record->action(),
             'amount' => $record->amount(),
             'currency' => $record->currency(),
-            'product_name' => $record->productName(),
+            'product_code' => $record->productCode(),
             'created_at' => $record->createdAt()->format('Y-m-d H:i:s'),
             'updated_at' => $record->updatedAt()->format('Y-m-d H:i:s'),
         ];

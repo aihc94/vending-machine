@@ -14,7 +14,7 @@ class DecreaseChangeQuantityService
         private FindChangeByAmountQuery $query,
     ) {}
 
-    public function execute(array $changeReturned): void
+    public function updateChangeStock(array $changeReturned): void
     {
         $this->validate($changeReturned);
 

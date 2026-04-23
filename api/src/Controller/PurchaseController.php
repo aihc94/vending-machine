@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Purchase\Application\UseCases\AddMoneyToPurchaseUseCase;
+use App\Purchase\Application\UseCases\ClosePurchaseUseCase;
 use App\Purchase\Application\UseCases\ObtainCurrentMachineStatusUseCase;
 use App\Purchase\Application\UseCases\PurchaseProductUseCase;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -52,15 +53,26 @@ class PurchaseController extends AbstractController
             return $response;
         }
 
-        $response = $useCase->execute(
-            $request->get('identifier'),
-            $request->get('productCode')
-        );
+        try {
+            $response = $useCase->execute(
+                $request->get('identifier'),
+                $request->get('productCode')
+            );
+        } catch (\Throwable $exception) {
+            return new JsonResponse(
+                [
+                    'error' => true,
+                    'message' => $exception->getMessage(),
+                ]
+            );
+        }
 
         return new JsonResponse(
             [
                 'identifier' => $response->identifier(),
-                'currentBalance' => $response->currentBalance(),
+                'changeToReturn' => $response->changeToReturn(),
+                'purchaseHistory' => $response->history()->toArray(),
+                'productProvided' => $response->productBeingPurchased()->toArray(),
             ]
         );
     }
@@ -82,6 +94,23 @@ class PurchaseController extends AbstractController
                 'products' => $response['products']->toArray(),
                 'change' => $response['change']->toArray(),
             ]
+        );
+    }
+
+    #[Route('/close-purchase', name: 'close-purchase', methods: ['POST'])]
+    public function closePurchase(
+        Request $request,
+        ClosePurchaseUseCase $useCase,
+    ): JsonResponse
+    {
+        if ($response = $this->checkApiSecret($request)) {
+            return $response;
+        }
+
+        $response = $useCase->execute($request->get('identifier'));
+
+        return new JsonResponse(
+            $response->toArray()
         );
     }
 

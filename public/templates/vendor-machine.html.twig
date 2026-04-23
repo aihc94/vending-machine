@@ -24,6 +24,8 @@
 
 <br><br>
 
+<div id="validationPurchaseMessage" style="color: red; font-size: 0.9em;"></div>
+
 <button onclick="closePurchase()">Close Purchase</button>
 
 <hr>
@@ -32,13 +34,44 @@
 <p>Total Amount: <span id="totalAmount">{{ purchase.totalAmount }}</span></p>
 <p>Restart Purchase: <span id="restartPurchase">{{ purchase.restartPurchase ? 'Yes' : 'No' }}</span></p>
 
-<h3>Debug</h3>
-<pre>
-    Products:
-    {{ dump(products) }}
+<div id="purchaseModal" style="
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.5);
+    justify-content:center;
+    align-items:center;
+">
+    <div style="
+        background:white;
+        padding:20px;
+        border-radius:8px;
+        min-width:300px;
+        text-align:left;
+    ">
+        <h2>Compra realizada</h2>
 
-    Change:
-    {{ dump(change) }}
-</pre>
+        <p><strong>Producto:</strong></p>
+        <pre id="modalProduct"></pre>
+
+        <p><strong>Cambio:</strong></p>
+        <p id="modalChange"></p>
+
+        <p><strong>Historial:</strong></p>
+        <div id="modalHistory" style="
+            max-height: 150px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            padding: 8px;
+            background: #f9f9f9;
+            font-size: 14px;
+        "></div>
+
+        <button onclick="reloadPage()">Recargar página</button>
+    </div>
+</div>
 
 <script src="{{ asset('js/purchase.js') }}"></script>

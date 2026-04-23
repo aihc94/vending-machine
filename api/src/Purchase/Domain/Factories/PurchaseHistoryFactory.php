@@ -17,7 +17,7 @@ class PurchaseHistoryFactory
             $data['action'],
             $data['amount'],
             $data['currency'],
-            $data['productName'] ?? null,
+            $data['productCode'] ?? null,
             isset($data['createdAt']) ? 
                 new \DateTime($data['createdAt']) : new \DateTime(),
             isset($data['updatedAt']) ?

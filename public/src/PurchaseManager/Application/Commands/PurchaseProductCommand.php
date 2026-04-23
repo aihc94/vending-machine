@@ -15,10 +15,14 @@ class PurchaseProductCommand
         private PurchaseManagerService $purchaseService,
     ) {}
 
-    public function execute(string $productCode): Purchase
+    public function execute(string $productCode): array
     {
         $identifier = $this->session->get('purchaseId');
 
-        return $this->purchaseService->purchaseProduct($identifier, $productCode);
+        $response = $this->purchaseService->purchaseProduct($identifier, $productCode);
+
+        $identifier = $this->session->remove('purchaseId');
+
+        return $response;
     }
 }

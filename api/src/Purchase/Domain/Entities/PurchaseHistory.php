@@ -9,13 +9,14 @@ class PurchaseHistory
     public const string ACTION_TYPE_CHARGE = 'charge';
     public const string ACTION_TYPE_PURCHASE = 'purchase';
     public const string ACTION_TYPE_CLOSE = 'close';
+    public const string ACTION_TYPE_CLOSE_NO_PURCHASE = 'close_without_purchase';
 
     public function __construct(
         private string $identifier,
         private string $action,
         private float $amount,
         private string $currency,
-        private ?string $productName,
+        private ?string $productCode,
         private \DateTime $createdAt,
         private \DateTime $updatedAt,
     ) {}
@@ -40,9 +41,9 @@ class PurchaseHistory
         return $this->currency;
     }
 
-    public function productName(): ?string
+    public function productCode(): ?string
     {
-        return $this->productName;
+        return $this->productCode;
     }
 
     public function createdAt(): \DateTime
@@ -62,7 +63,7 @@ class PurchaseHistory
             'action' => $this->action(),
             'amount' => $this->amount(),
             'currency' => $this->currency(),
-            'productName' => $this->productName(),
+            'productCode' => $this->productCode(),
             'createdAt' => $this->createdAt()->format('Y-m-d H:i:s'),
             'updatedAt' => $this->updatedAt()->format('Y-m-d H:i:s'),
         ];

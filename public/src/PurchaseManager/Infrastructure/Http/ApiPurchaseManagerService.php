@@ -47,10 +47,10 @@ class ApiPurchaseManagerService implements PurchaseManagerService
     public function purchaseProduct(
         string $identifier,
         string $productCode
-    ): Purchase
+    ): array
     {
         $requestData = [
-            'identifier' => $indentifier,
+            'identifier' => $identifier,
             'productCode' => $productCode
         ];
 
@@ -64,10 +64,15 @@ class ApiPurchaseManagerService implements PurchaseManagerService
 
         $response = $this->httpClient->send($request);
 
-        return PurchaseFactory::fromArray([
-            'identifier' => $response->body()['identifier'],
-            'totalAmount' => $response->body()['currentBalance'],
-        ]);
+        if (isset($response->body()['error'])) {
+            throw new \Exception($response->body()['message']);
+        }
+
+        return [
+            'product' => $response->body()['productProvided'],
+            'change' => $response->body()['changeToReturn'],
+            'purchaseHistory' => $response->body()['purchaseHistory'],
+        ];
     }
 
     public function obtainMachineStatus(): array
@@ -84,6 +89,27 @@ class ApiPurchaseManagerService implements PurchaseManagerService
         return [
             'products' => $response->body()['products'],
             'change' => $response->body()['change'],
+        ];
+    }
+
+    public function closePurchase(string $identifier): array
+    {
+        $data = [
+            'method' => 'POST',
+            'url' => '/close-purchase',
+            'requestData' => [
+                'identifier' => $identifier
+            ]
+        ];
+
+        $request = HttpRequestFactory::fromArray($data);
+
+        $response = $this->httpClient->send($request);
+
+        return [
+            'isActionNeeded' => $response->body()['isActionNeeded'],
+            'moneyFrom' => $response->body()['moneyFrom'],
+            'returnAmounts' => $response->body()['returnAmounts'],
         ];
     }
 }

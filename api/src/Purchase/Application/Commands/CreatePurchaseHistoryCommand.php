@@ -18,7 +18,8 @@ class CreatePurchaseHistoryCommand
         string $identifier,
         string $action,
         float $amount,
-        string $currency,
+        string $currency = 'EUR',
+        ?string $productCode = null,
     ): PurchaseHistory
     {
         $purchaseHistory = PurchaseHistoryFactory::fromArray(
@@ -26,7 +27,8 @@ class CreatePurchaseHistoryCommand
                 'identifier' => $identifier,
                 'action' => $action,
                 'amount' => $amount,
-                'currency' => $currency
+                'currency' => $currency,
+                'productCode' => $productCode,
             ]
         );
 

@@ -97,12 +97,43 @@ class VendingMachineController extends AbstractController
 
         $data = json_decode($request->getContent(), true);
             
-        $purchase = $command->execute($data['productCode']);
-
+        try {
+            $response = $command->execute($data['productCode']);
+        } catch (\Throwable $exception) {
+            return new JsonResponse(
+                [
+                    'failedOnPurchase' => true,
+                    'message' => $exception->getMessage()
+                ]
+            );
+        }
+        
         return new JsonResponse(
-            [
-                'purchase' => $purchase->toArray()
-            ]
+            $response
+        );
+    }
+
+    #[Route('/close-purchase', name: 'close-purchase', methods: ['POST'])]
+    public function closePurchase(
+        Request $request,
+        ClosePurchaseUseCase $useCase
+    ): JsonResponse
+    {
+        $this->validateCsrf($request);
+            
+        try {
+            $response = $useCase->execute();
+        } catch (\Throwable $exception) {
+            return new JsonResponse(
+                [
+                    'failedOnPurchase' => true,
+                    'message' => $exception->getMessage()
+                ]
+            );
+        }
+        
+        return new JsonResponse(
+            $response
         );
     }
 
