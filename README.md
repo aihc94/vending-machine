@@ -5,7 +5,7 @@ This is a simple vending machine simulation project. It allows users to select i
 - Supports multiple products with prices.
 - Handles coin insertion and change calculation.
 - Basic inventory management.
-- Has logic separated on 2 services, the one where the client interacts (public) and other with all the core logic of the project (api) which is more difficult to reach.
+- Has logic separated on 2 services, the one where the client interacts (public) and other with all the core logic of the project (api).
 
 ## Installation
 1. Clone the repository: `git clone https://github.com/aihc94/vending-machine.git`
