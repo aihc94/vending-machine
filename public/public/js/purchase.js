@@ -63,7 +63,7 @@ function closePurchase() {
     })
     .then(res => res.json())
     .then(data => {
-        if (data.failedOnPurchase) {
+        if (data.failedOnClosure) {
             validationPurchaseMessage.textContent = data.message;
             return;
         }
@@ -88,16 +88,11 @@ function showCloseModal(data) {
 
     document.getElementById('modalProduct').textContent = '';
 
-    if (data.moneyForm === 'client') {
-        document.getElementById('modalChange').textContent =
+    document.getElementById('modalChange').textContent =
             JSON.stringify({
-                message: 'Dinero insertado por el cliente devuelto',
-                amount: data.returnAmounts
-            });
-    } else {
-        document.getElementById('modalChange').textContent =
-            JSON.stringify(data.returnAmounts);
-    }
+                message: 'Money inserted by client returned. Displays the amount and the repetition is the quantity',
+                amount: data.change
+            }, null, 2);
 
     document.getElementById('modalHistory').textContent =
         JSON.stringify(data.purchaseHistory, null, 2);

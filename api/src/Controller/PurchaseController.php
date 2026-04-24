@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Purchase\Application\UseCases\AddMoneyToPurchaseUseCase;
-use App\Purchase\Application\UseCases\ClosePurchaseUseCase;
+use App\Purchase\Application\UseCases\ClosePurchaseFromClientInputUseCase;
 use App\Purchase\Application\UseCases\ObtainCurrentMachineStatusUseCase;
 use App\Purchase\Application\UseCases\PurchaseProductUseCase;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -100,7 +100,7 @@ class PurchaseController extends AbstractController
     #[Route('/close-purchase', name: 'close-purchase', methods: ['POST'])]
     public function closePurchase(
         Request $request,
-        ClosePurchaseUseCase $useCase,
+        ClosePurchaseFromClientInputUseCase $useCase,
     ): JsonResponse
     {
         if ($response = $this->checkApiSecret($request)) {
@@ -110,7 +110,11 @@ class PurchaseController extends AbstractController
         $response = $useCase->execute($request->get('identifier'));
 
         return new JsonResponse(
-            $response->toArray()
+            [
+                'identifier' => $response->identifier(),
+                'changeToReturn' => $response->changeToReturn(),
+                'moneyFrom' => $response->moneyFrom()
+            ]
         );
     }
 

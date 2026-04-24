@@ -18,7 +18,8 @@ class CurrentPurchaseInformationFactory
             $data['history'] ?? new PurchaseHistoryCollection([]),
             $data['currentBalance'],
             $data['product'] ?? null,
-            $data['changeToReturn'] ?? []
+            $data['changeToReturn'] ?? [],
+            $data['moneyFrom'] ?? CurrentPurchaseInformation::MONEY_FROM_CHANGE,
         );
     }
 

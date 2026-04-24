@@ -31,6 +31,11 @@ class PurchaseBalanceCalculartorService
             ) {
                 $balance -= $purchaseHistory->amount();
             }
+            if (
+                $purchaseHistory->action() === PurchaseHistory::ACTION_TYPE_CLOSE_NO_PURCHASE
+            ) {
+                $balance -= $purchaseHistory->amount();
+            }
         }
 
         return round($balance, 2);

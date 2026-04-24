@@ -126,7 +126,7 @@ class VendingMachineController extends AbstractController
         } catch (\Throwable $exception) {
             return new JsonResponse(
                 [
-                    'failedOnPurchase' => true,
+                    'failedOnClosure' => true,
                     'message' => $exception->getMessage()
                 ]
             );

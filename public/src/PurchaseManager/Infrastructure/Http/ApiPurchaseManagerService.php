@@ -107,9 +107,8 @@ class ApiPurchaseManagerService implements PurchaseManagerService
         $response = $this->httpClient->send($request);
 
         return [
-            'isActionNeeded' => $response->body()['isActionNeeded'],
             'moneyFrom' => $response->body()['moneyFrom'],
-            'returnAmounts' => $response->body()['returnAmounts'],
+            'change' => $response->body()['changeToReturn'],
         ];
     }
 }

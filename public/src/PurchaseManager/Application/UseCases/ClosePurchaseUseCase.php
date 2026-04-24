@@ -20,13 +20,8 @@ class ClosePurchaseUseCase
         $purchaseId = $this->session->get('purchaseId');
 
         $response = $this->purchaseService->closePurchase($purchaseId);
-
-        if (!$response['isActionNeeded']) {
-            $purchaseId = $this->session->remove('purchaseId');
-            return [];
-        }
         
-        $purchaseId = $this->session->remove('purchaseId');
+        $this->session->remove('purchaseId');
 
         return $response;
     }
