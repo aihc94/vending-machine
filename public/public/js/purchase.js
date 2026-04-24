@@ -49,7 +49,11 @@ function purchase(product) {
             validationPurchaseMessage.textContent = data.message;
             return;
         }
-        showModal(data);
+        if (data.moneyFrom === 'client') {
+            showCloseModal(data);
+        } else {
+            showModal(data);
+        }
     });
 }
 

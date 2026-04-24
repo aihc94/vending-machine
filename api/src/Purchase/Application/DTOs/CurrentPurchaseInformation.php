@@ -57,7 +57,7 @@ class CurrentPurchaseInformation
             'identifier' => $this->identifier(),
             'history' => $this->history()->toArray(),
             'currentBalance' => $this->currentBalance(),
-            'productBeingPurchased' => $this->productBeingPurchased(),
+            'productBeingPurchased' => $this->productBeingPurchased()?->toArray(),
             'changeToReturn' => $this->changeToReturn(),
             'moneyFrom' => $this->moneyFrom(),
         ];

@@ -6,7 +6,7 @@ namespace App\Purchase\Application\Services;
 
 use App\Purchase\Application\Queries\FindAllChangeQuery;
 use App\Purchase\Domain\Entities\ChangeCollection;
-use App\Purchase\Domain\Entities\ChangeNotAvailableForAmountException;
+use App\Purchase\Domain\Exceptions\ChangeNotAvailableForAmountException;
 
 class ChangeGetterForValueService
 {

@@ -72,7 +72,8 @@ class PurchaseController extends AbstractController
                 'identifier' => $response->identifier(),
                 'changeToReturn' => $response->changeToReturn(),
                 'purchaseHistory' => $response->history()->toArray(),
-                'productProvided' => $response->productBeingPurchased()->toArray(),
+                'productProvided' => $response->productBeingPurchased()?->toArray(),
+                'moneyFrom' => $response->moneyFrom(),
             ]
         );
     }

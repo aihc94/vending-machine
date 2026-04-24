@@ -72,6 +72,7 @@ class ApiPurchaseManagerService implements PurchaseManagerService
             'product' => $response->body()['productProvided'],
             'change' => $response->body()['changeToReturn'],
             'purchaseHistory' => $response->body()['purchaseHistory'],
+            'moneyFrom' => $response->body()['moneyFrom'],
         ];
     }
 

@@ -34,6 +34,34 @@
 <p>Total Amount: <span id="totalAmount">{{ purchase.totalAmount }}</span></p>
 <p>Restart Purchase: <span id="restartPurchase">{{ purchase.restartPurchase ? 'Yes' : 'No' }}</span></p>
 
+<hr>
+
+<h3>Change Available</h3>
+
+<div style="
+    max-height: 150px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    padding: 8px;
+    background: #f4f4f4;
+    font-size: 14px;
+">
+    {% if change is defined and change|length > 0 %}
+        <ul style="padding-left: 18px; margin: 0;">
+            {% for coin in change %}
+                <li>
+                    {{ coin.quantity }} x {{ coin.amount }} {{ coin.currency }}
+                    {% if coin.quantity == 0 %}
+                        <span style="color: #999;">(sin stock)</span>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p style="margin:0;">No hay cambio disponible</p>
+    {% endif %}
+</div>
+
 <div id="purchaseModal" style="
     display:none;
     position:fixed;

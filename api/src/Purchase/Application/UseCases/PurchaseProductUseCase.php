@@ -14,8 +14,10 @@ use App\Purchase\Application\Queries\FindAllPurchaseHistoryByIdentifierQuery;
 use App\Purchase\Application\Services\ChangeGetterForValueService;
 use App\Purchase\Application\Services\DecreaseChangeQuantityService;
 use App\Purchase\Application\Services\PurchaseBalanceCalculartorService;
+use App\Purchase\Application\UseCases\ClosePurchaseFromClientInputUseCase;
 use App\Purchase\Domain\Entities\PurchaseHistory;
 use App\Purchase\Domain\Entities\PurchaseHistoryCollection;
+use App\Purchase\Domain\Exceptions\ChangeNotAvailableForAmountException;
 
 class PurchaseProductUseCase
 {
@@ -26,7 +28,8 @@ class PurchaseProductUseCase
         private FindProductByCodeQuery $productQuery,
         private ChangeGetterForValueService $changeGetterService,
         private UpdateOrAddProductCommand $updateProductCommand,
-        private DecreaseChangeQuantityService $changeUpdaterService
+        private DecreaseChangeQuantityService $changeUpdaterService,
+        private ClosePurchaseFromClientInputUseCase $returnFromClientUseCase,
     ) {}
 
     public function execute(
@@ -41,7 +44,11 @@ class PurchaseProductUseCase
         $amountToReturn = $this->validate($product, $purchaseHistoryCollection);
 
         if ($amountToReturn !== 0) {
-            $changeToReturn = $this->changeGetterService->getChangeForValue($amountToReturn);
+            try {
+                $changeToReturn = $this->changeGetterService->getChangeForValue($amountToReturn);
+            } catch (ChangeNotAvailableForAmountException) {
+                return $this->returnFromClientUseCase->execute($identifier);
+            }
         }
 
         $this->updateProductPurchaseInformation($identifier, $product);

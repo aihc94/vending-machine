@@ -30,8 +30,19 @@ class VendingMachineController extends AbstractController
         $purchase = $initializePurchase->execute();
 
         if ($purchase->restartPurchase()) {
-            $closePurchase->execute($purchase);
-            return $this->redirect($request->getUri());
+            $response = $closePurchase->execute($purchase);
+
+            if (!empty($response['change'])) {
+                return $this->render(
+                    'machine-reboot-error.html.twig',
+                    [
+                        'moneyFrom' => $response['moneyFrom'],
+                        'change' => $response['change'],
+                    ]
+                );
+            } else {
+                return $this->redirect($request->getUri());
+            }
         }
 
         $machineStatus = $machineStatusQuery->execute();
