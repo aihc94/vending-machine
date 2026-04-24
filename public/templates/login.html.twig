@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Iniciar sesión</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .login-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            width: 300px;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #007BFF;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+
+<div class="login-container">
+    <h2>Login</h2>
+
+    {# Mostrar error si existe #}
+    {% if error is defined and error %}
+        <div class="error">
+            {{ message }}
+        </div>
+    {% endif %}
+    <form method="post" action="{{ path('login') }}">
+        <label for="username">Username (admin)</label>
+        <input type="text" id="username" name="username" value="" required>
+
+        <label for="password">Contraseña (1234)</label>
+        <input type="password" id="password" name="password" required>
+
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token('service') }}">
+
+        <button type="submit">Entrar</button>
+    </form>
+</div>
+
+</body>
+</html>

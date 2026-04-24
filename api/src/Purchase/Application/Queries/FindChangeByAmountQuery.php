@@ -13,7 +13,7 @@ class FindChangeByAmountQuery
         private ChangeRepository $repository,
     ) {}
 
-    public function execute(float $amount): Change
+    public function execute(float $amount): ?Change
     {
         return $this->repository->findByAmount($amount);
     } 

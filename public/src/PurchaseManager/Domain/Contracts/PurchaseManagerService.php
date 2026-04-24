@@ -18,6 +18,4 @@ interface PurchaseManagerService
         string $purchaseIdentifier,
         string $productCode
     ): array;
-
-    public function obtainMachineStatus(): array;
 }

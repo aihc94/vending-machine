@@ -11,6 +11,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
+use Symfony\Component\Console\Input\InputArgument;
 
 #[AsCommand(name: 'app:init-database')]
 class InitDatabase extends Command
@@ -30,11 +31,26 @@ class InitDatabase extends Command
         $this->changeCommand = $changeCommand;
     }
 
+    protected function configure(): void
+    {
+        $this
+            ->setName('app:init-database')
+            ->setDescription('Database initialization')
+            ->addArgument(
+                'runSeeders',
+                InputArgument::OPTIONAL,
+                'Tells if want to run seeders or only config',
+                true
+            );
+    }
+
     protected function execute(
         InputInterface $input,
         OutputInterface $output
     ): int
     {
+        $runSeeders = $input->getArgument('runSeeders') === 'true';
+
         $client = new Client('mongodb://admin:notYourProblem@database:27017');
         $db = $client->selectDatabase('vending_machine');
 
@@ -66,14 +82,17 @@ class InitDatabase extends Command
             ],
         ];
 
-        foreach ($productSeed as $product) {
-            $this->productCommand->execute(
-                $product['code'],
-                $product['name'],
-                $product['price'],
-                $product['quantity'],
-            );
+        if ($runSeeders) {
+            foreach ($productSeed as $product) {
+                $this->productCommand->execute(
+                    $product['code'],
+                    $product['name'],
+                    $product['price'],
+                    $product['quantity']
+                );
+            }
         }
+        
 
         $collection = $db->selectCollection('purchase_history');
 
@@ -106,11 +125,13 @@ class InitDatabase extends Command
             ],
         ];
 
-        foreach ($changeSeed as $change) {
-            $this->changeCommand->execute(
-                $change['amount'],
-                $change['quantity'],
-            );
+        if ($runSeeders) {
+            foreach ($changeSeed as $change) {
+                $this->changeCommand->execute(
+                    $change['amount'],
+                    $change['quantity']
+                );
+            }
         }
 
         $output->writeln('Base de datos inicializada correctamente');

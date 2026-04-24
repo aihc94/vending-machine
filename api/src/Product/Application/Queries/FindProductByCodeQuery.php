@@ -13,7 +13,7 @@ class FindProductByCodeQuery
         private ProductRepository $repository,
     ) {}
 
-    public function execute(string $code): Product
+    public function execute(string $code): ?Product
     {
         return $this->repository->findByCode($code);
     }

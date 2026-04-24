@@ -40,11 +40,15 @@ class MongoDbChangeRepository implements ChangeRepository
         );
     }
 
-    public function findByAmount(float $amount): Change
+    public function findByAmount(float $amount): ?Change
     {
         $result = $this->collection->findOne([
             'amount' => $amount
         ]);
+
+        if (!isset($result)) {
+            return null;
+        }
 
         return $this->toDomain($result);
     }

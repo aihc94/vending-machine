@@ -10,6 +10,6 @@ use App\Purchase\Domain\Entities\ChangeCollection;
 interface ChangeRepository
 {
     public function persist(Change $change): void;
-    public function findByAmount(float $amount): Change;
+    public function findByAmount(float $amount): ?Change;
     public function findAll(): ChangeCollection;
 }

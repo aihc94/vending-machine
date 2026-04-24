@@ -6,7 +6,7 @@ namespace App\Controller;
 
 use App\PurchaseManager\Application\Commands\AddMoneyToPurchaseCommand;
 use App\PurchaseManager\Application\Commands\PurchaseProductCommand;
-use App\PurchaseManager\Application\Queries\ObtainVendingMachineStatusQuery;
+use App\StockManager\Application\Queries\ObtainVendingMachineStockQuery;
 use App\PurchaseManager\Application\UseCases\ClosePurchaseUseCase;
 use App\PurchaseManager\Application\UseCases\InitializePurchaseUseCase;
 use App\PurchaseManager\Domain\Exceptions\AmountNotValidException;
@@ -24,7 +24,7 @@ class VendingMachineController extends AbstractController
         Request $request,
         InitializePurchaseUseCase $initializePurchase,
         ClosePurchaseUseCase $closePurchase,
-        ObtainVendingMachineStatusQuery $machineStatusQuery,
+        ObtainVendingMachineStockQuery $machineStockQuery,
     ): Response
     {
         $purchase = $initializePurchase->execute();
@@ -45,7 +45,7 @@ class VendingMachineController extends AbstractController
             }
         }
 
-        $machineStatus = $machineStatusQuery->execute();
+        $machineStatus = $machineStockQuery->execute();
 
         return $this->render(
             'vendor-machine.html.twig',

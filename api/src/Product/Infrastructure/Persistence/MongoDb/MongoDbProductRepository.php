@@ -40,11 +40,15 @@ class MongoDbProductRepository implements ProductRepository
         );
     }
 
-    public function findByCode(string $code): Product
+    public function findByCode(string $code): ?Product
     {
         $result = $this->collection->findOne([
             'code' => $code
         ]);
+
+        if (!isset($result)) {
+            return null;
+        }
 
         return $this->toDomain($result);
     }

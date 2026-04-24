@@ -10,6 +10,6 @@ use App\Product\Domain\Entities\ProductCollection;
 interface ProductRepository
 {
     public function persist(Product $product): void;
-    public function findByCode(string $code): Product;
+    public function findByCode(string $code): ?Product;
     public function findAll(): ProductCollection;
 }

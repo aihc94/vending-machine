@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\PurchaseManager\Infrastructure\Http;
+namespace App\PurchaseManager\Infrastructure\Http\Api;
 
 use App\PurchaseManager\Domain\Contracts\PurchaseManagerService;
 use App\PurchaseManager\Domain\Factories\PurchaseFactory;
@@ -73,23 +73,6 @@ class ApiPurchaseManagerService implements PurchaseManagerService
             'change' => $response->body()['changeToReturn'],
             'purchaseHistory' => $response->body()['purchaseHistory'],
             'moneyFrom' => $response->body()['moneyFrom'],
-        ];
-    }
-
-    public function obtainMachineStatus(): array
-    {
-        $data = [
-            'method' => 'GET',
-            'url' => '/machine-status'
-        ];
-
-        $request = HttpRequestFactory::fromArray($data);
-
-        $response = $this->httpClient->send($request);
-
-        return [
-            'products' => $response->body()['products'],
-            'change' => $response->body()['change'],
         ];
     }
 

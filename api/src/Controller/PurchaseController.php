@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Product\Application\UseCases\UpdateProductStockUseCase;
 use App\Purchase\Application\UseCases\AddMoneyToPurchaseUseCase;
 use App\Purchase\Application\UseCases\ClosePurchaseFromClientInputUseCase;
 use App\Purchase\Application\UseCases\ObtainCurrentMachineStatusUseCase;
 use App\Purchase\Application\UseCases\PurchaseProductUseCase;
+use App\Purchase\Application\UseCases\UpdateChangeStockUseCase;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -115,6 +117,70 @@ class PurchaseController extends AbstractController
                 'identifier' => $response->identifier(),
                 'changeToReturn' => $response->changeToReturn(),
                 'moneyFrom' => $response->moneyFrom()
+            ]
+        );
+    }
+
+    #[Route('/update-product-stock', name: 'update-product-stock', methods: ['POST'])]
+    public function updateProductStock(
+        Request $request,
+        UpdateProductStockUseCase $useCase,
+    ): JsonResponse
+    {
+        if ($response = $this->checkApiSecret($request)) {
+            return $response;
+        }
+
+        try {
+            $useCase->execute(
+                $request->get('code'),
+                $request->get('name'),
+                (float)$request->get('price'),
+                (int)$request->get('quantity'),
+            );
+        } catch (\Throwable $exception) {
+            return new JsonResponse(
+                [
+                    'error' => true,
+                    'message' => $exception->getMessage(),
+                ]
+            );
+        }
+
+        return new JsonResponse(
+            [
+                'success' => true,
+            ]
+        );
+    }
+
+    #[Route('/update-change-stock', name: 'update-change-stock', methods: ['POST'])]
+    public function updateChangeStock(
+        Request $request,
+        UpdateChangeStockUseCase $useCase,
+    ): JsonResponse
+    {
+        if ($response = $this->checkApiSecret($request)) {
+            return $response;
+        }
+
+        try {
+            $useCase->execute(
+                (float)$request->get('amount'),
+                (int)$request->get('quantity'),
+            );
+        } catch (\Throwable $exception) {
+            return new JsonResponse(
+                [
+                    'error' => true,
+                    'message' => $exception->getMessage(),
+                ]
+            );
+        }
+
+        return new JsonResponse(
+            [
+                'success' => true,
             ]
         );
     }
