@@ -1,112 +1,84 @@
-<meta name="csrf-token" content="{{ csrf_token('ajax') }}">
+<link rel="stylesheet" href="{{ asset('css/vending.css') }}">
+<div class="vending">
 
-<input type="number" id="money" step="0.01" min="0" required>
-
-<div id="validationMessage" style="color: red; font-size: 0.9em;"></div>
-
-<br><br>
-
-<button onclick="addMoney()">Guardar dinero</button>
-
-<br><br>
-
-{% for product in products %}
-    <div style="margin-bottom: 10px;">
-        <button onclick="purchase('{{ product.code }}')">
-            {{ product.name }}
-        </button>
-        <div style="font-size: 0.9em;">
-            Precio: {{ product.price }} {{ product.currency }}<br>
-            Stock: {{ product.quantity }}
-        </div>
+    <div class="screen">
+        <input type="number" id="money" step="0.01" min="0" required>
+        <div id="validationMessage"></div>
+        <button onclick="addMoney()">Guardar dinero</button>
     </div>
-{% endfor %}
 
-<br><br>
+    <div class="products">
+        {% for product in products %}
+            <div class="product">
+                <button onclick="purchase('{{ product.code }}')">
+                    {{ product.name }}
+                </button>
+                <div class="small-text">
+                    {{ product.price }} {{ product.currency }}<br>
+                    Stock: {{ product.quantity }}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
 
-<div id="validationPurchaseMessage" style="color: red; font-size: 0.9em;"></div>
+    <br>
 
-<button onclick="closePurchase()">Close Purchase</button>
+    <div id="validationPurchaseMessage"></div>
 
-<hr>
+    <button onclick="closePurchase()">Finalizar compra</button>
 
-<p>Identifier: <span id="identifier">{{ purchase.identifier }}</span></p>
-<p>Total Amount: <span id="totalAmount">{{ purchase.totalAmount }}</span></p>
-<p>Restart Purchase: <span id="restartPurchase">{{ purchase.restartPurchase ? 'Yes' : 'No' }}</span></p>
+    <hr>
 
-<hr>
+    <div class="screen">
+        <p>ID: <span id="identifier">{{ purchase.identifier }}</span></p>
+        <p>Total: <span id="totalAmount">{{ purchase.totalAmount }}</span></p>
+    </div>
 
-<h3>Change Available</h3>
+    <h3>Change</h3>
 
-<div style="
-    max-height: 150px;
-    overflow-y: auto;
-    border: 1px solid #ccc;
-    padding: 8px;
-    background: #f4f4f4;
-    font-size: 14px;
-">
-    {% if change is defined and change|length > 0 %}
-        <ul style="padding-left: 18px; margin: 0;">
-            {% for coin in change %}
-                <li>
-                    {{ coin.quantity }} x {{ coin.amount }} {{ coin.currency }}
-                    {% if coin.quantity == 0 %}
-                        <span style="color: #999;">(sin stock)</span>
-                    {% endif %}
-                </li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p style="margin:0;">No hay cambio disponible</p>
-    {% endif %}
+    <div class="change-box">
+        {% if change is defined and change|length > 0 %}
+            <ul>
+                {% for coin in change %}
+                    <li>
+                        {{ coin.quantity }} x {{ coin.amount }} {{ coin.currency }}
+                        {% if coin.quantity == 0 %}
+                            <span style="color:#777">(sin stock)</span>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No hay cambio disponible</p>
+        {% endif %}
+    </div>
+
 </div>
 
 <div id="purchaseModal" style="
     display:none;
     position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background:rgba(0,0,0,0.5);
+    top:0; left:0;
+    width:100%; height:100%;
+    background:rgba(0,0,0,0.7);
     justify-content:center;
     align-items:center;
 ">
-    <div style="
-        background:white;
-        padding:20px;
-        border-radius:8px;
-        min-width:300px;
-        text-align:left;
-    ">
+    <div class="modal-box">
         <h2>Compra realizada</h2>
 
         <p><strong>Producto:</strong></p>
         <pre id="modalProduct"></pre>
 
         <p><strong>Cambio:</strong></p>
-        <div id="modalChange" style="
-            max-height: 150px;
-            overflow-y: auto;
-            border: 1px solid #ccc;
-            padding: 8px;
-            background: #f9f9f9;
-            font-size: 14px;
-        "></div>
+        <div id="modalChange" class="change-box"></div>
 
         <p><strong>Historial:</strong></p>
-        <div id="modalHistory" style="
-            max-height: 150px;
-            overflow-y: auto;
-            border: 1px solid #ccc;
-            padding: 8px;
-            background: #f9f9f9;
-            font-size: 14px;
-        "></div>
+        <div id="modalHistory" class="change-box"></div>
 
-        <button onclick="reloadPage()">Recargar página</button>
+        <button onclick="reloadPage()">Recargar</button>
     </div>
 </div>
 
+<meta name="csrf-token" content="{{ csrf_token('ajax') }}">
 <script src="{{ asset('js/purchase.js') }}"></script>
