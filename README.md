@@ -16,4 +16,6 @@ This is a simple vending machine simulation project. It allows users to select i
     - Run "make install"
     - If want a seeded database run "make init-database-with-seeders"
     - If want only database configuration "make init-database-without-seeders"
-4. Go to http://localhost/purchase
+4. Go to http://localhost/purchase to insert money and purchase products
+5. Go to http://localhost/service to add stock to the DDBB
+

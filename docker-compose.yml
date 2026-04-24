@@ -1,6 +1,6 @@
 services:
   api:
-    image: php84-fpm:dev
+    image: php84-fpm:prod
     container_name: api
     volumes:
       - ./api:/var/www
@@ -13,7 +13,7 @@ services:
     command: sh ./docker/start.sh
 
   public:
-    image: php84-fpm:dev
+    image: php84-fpm:prod
     container_name: public
     volumes:
       - ./public:/var/www
